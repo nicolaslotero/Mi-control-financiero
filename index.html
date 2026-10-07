@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Control Financiero</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #17202a;
+}
+
+header {
+    background: #111827;
+    color: white;
+    padding: 24px 18px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 25px;
+}
+
+header p {
+    margin: 7px 0 0;
+    color: #cbd5e1;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 18px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.07);
+}
+
+.balance {
+    text-align: center;
+}
+
+.balance small {
+    color: #64748b;
+}
+
+.balance h2 {
+    font-size: 36px;
+    margin: 8px 0;
+}
+
+.progress {
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 14px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 80.8%;
+    background: #f59e0b;
+    transition: .3s;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.stat {
+    background: #f8fafc;
+    padding: 14px;
+    border-radius: 14px;
+}
+
+.stat span {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.stat strong {
+    display: block;
+    margin-top: 5px;
+    font-size: 18px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    font-size: 16px;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    background: #111827;
+    color: white;
+}
+
+button:active {
+    transform: scale(.98);
+}
+
+.warning {
+    padding: 14px;
+    border-radius: 12px;
+    background: #fff7ed;
+    color: #9a3412;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.movement {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.movement:last-child {
+    border-bottom: none;
+}
+
+.movement small {
+    display: block;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.expense {
+    color: #dc2626;
+}
+
+.income {
+    color: #16a34a;
+}
+
+.saving {
+    color: #2563eb;
+}
+
+.examples {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.reset {
+    background: #dc2626;
+    font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>💰 Mi Control Financiero</h1>
+    <p>Control de mi quincena</p>
+</header>
+
+<div class="container">
+
+    <div class="card balance">
+        <small>Dinero disponible</small>
+        <h2 id="disponible">$192.000</h2>
+
+        <div class="progress">
+            <div class="progress-bar" id="barra"></div>
+        </div>
+
+        <div id="advertencia" class="warning">
+            ⚠️ Ya utilizaste más del 80% de tu presupuesto.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="stats">
+
+            <div class="stat">
+                <span>Presupuesto</span>
+                <strong id="presupuesto">$1.000.000</strong>
+            </div>
+
+            <div class="stat">
+                <span>Gastado</span>
+                <strong id="gastado">$808.000</strong>
+            </div>
+
+            <div class="stat">
+                <span>Ingresos extra</span>
+                <strong id="ingresos">$0</strong>
+            </div>
+
+            <div class="stat">
+                <span>Ahorro</span>
+                <strong id="ahorro">$0</strong>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <label>Registrar movimiento</label>
+
+        <input
+            id="movimiento"
+            type="text"
+            placeholder="Ej: 80k fiesta"
+            autocomplete="off"
+        >
+
+        <button onclick="registrarMovimiento()">
+            Registrar
+        </button>
+
+        <div class="examples">
+            <b>Ejemplos:</b><br>
+            80k fiesta<br>
+            15k gasolina<br>
+            +70k trabajo sábado<br>
+            ingreso 50k<br>
+            ahorro 30k
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📋 Movimientos</h3>
+        <div id="lista"></div>
+    </div>
+
+    <div class="card">
+        <button class="reset" onclick="reiniciar()">
+            Reiniciar movimientos
+        </button>
+    </div>
+
+</div>
+
+<script>
+
+let datos = JSON.parse(localStorage.getItem("finanzas")) || {
+
+    presupuesto: 1000000,
+
+    disponible: 192000,
+
+    ingresos: 0,
+
+    ahorro: 0,
+
+    gastosNuevos: 0,
+
+    movimientos: []
+
+};
+
+function dinero(numero) {
+
+    return "$" + Math.round(numero).toLocaleString("es-CO");
+
+}
+
+function guardar() {
+
+    localStorage.setItem("finanzas", JSON.stringify(datos));
+
+}
+
+function actualizar() {
+
+    const gastosTotales = 808000 + datos.gastosNuevos;
+
+    document.getElementById("disponible").textContent =
+        dinero(datos.disponible);
+
+    document.getElementById("presupuesto").textContent =
+        dinero(datos.presupuesto);
+
+    document.getElementById("gastado").textContent =
+        dinero(gastosTotales);
+
+    document.getElementById("ingresos").textContent =
+        dinero(datos.ingresos);
+
+    document.getElementById("ahorro").textContent =
+        dinero(datos.ahorro);
+
+    const totalDisponible =
+        datos.presupuesto + datos.ingresos;
+
+    const usado =
+        gastosTotales + datos.ahorro;
+
+    let porcentaje =
+        (usado / totalDisponible) * 100;
+
+    if (porcentaje > 100) porcentaje = 100;
+
+    document.getElementById("barra").style.width =
+        porcentaje + "%";
+
+    const advertencia =
+        document.getElementById("advertencia");
+
+    if (datos.disponible <= 0) {
+
+        advertencia.textContent =
+            "🚨 Te quedaste sin presupuesto disponible.";
+
+    } else if (porcentaje >= 80) {
+
+        advertencia.textContent =
+            "⚠️ Cuidado: ya utilizaste el " +
+            porcentaje.toFixed(1) +
+            "% de tu presupuesto.";
+
+    } else if (porcentaje >= 60) {
+
+        advertencia.textContent =
+            "🟡 Vas utilizando el " +
+            porcentaje.toFixed(1) +
+            "% de tu presupuesto.";
+
+    } else {
+
+        advertencia.textContent =
+            "🟢 Vas bien con tu presupuesto.";
+
+    }
+
+    mostrarMovimientos();
+
+    guardar();
+
+}
+
+function registrarMovimiento() {
+
+    const input =
+        document.getElementById("movimiento");
+
+    let texto =
+        input.value.trim();
+
+    if (!texto) {
+
+        alert("Escribe un movimiento.");
+
+        return;
+
+    }
+
+    let tipo = "gasto";
+
+    const textoMinuscula =
+        texto.toLowerCase();
+
+    if (
+        texto.startsWith("+") ||
+        textoMinuscula.includes("ingreso") ||
+        textoMinuscula.includes("recibi") ||
+        textoMinuscula.includes("recibí") ||
+        textoMinuscula.includes("me pagaron") ||
+        textoMinuscula.includes("salario") ||
+        textoMinuscula.includes("nómina") ||
+        textoMinuscula.includes("nomina")
+    ) {
+
+        tipo = "ingreso";
+
+    }
+
+    if (textoMinuscula.includes("ahorro")) {
+
+        tipo = "ahorro";
+
+    }
+
+    const numeroEncontrado =
+        texto.match(/\d+(?:[.,]\d+)?\s*k?/i);
+
+    if (!numeroEncontrado) {
+
+        alert("No encontré el valor. Ejemplo: 80k fiesta");
+
+        return;
+
+    }
+
+    let valorTexto =
+        numeroEncontrado[0]
+        .toLowerCase()
+        .replace(/\s/g, "")
+        .replace(",", ".");
+
+    let valor =
+        parseFloat(valorTexto);
+
+    if (valorTexto.includes("k")) {
+
+        valor = valor * 1000;
+
+    }
+
+    if (!valor || valor <= 0) {
+
+        alert("Escribe un valor válido.");
+
+        return;
+
+    }
+
+    let descripcion =
+        texto
+        .replace(numeroEncontrado[0], "")
+        .replace("+", "")
+        .trim();
+
+    if (!descripcion) {
+
+        descripcion = "Sin descripción";
+
+    }
+
+    if (tipo === "gasto") {
+
+        datos.disponible -= valor;
+
+        datos.gastosNuevos += valor;
+
+    }
+
+    if (tipo === "ingreso") {
+
+        datos.disponible += valor;
+
+        datos.ingresos += valor;
+
+    }
+
+    if (tipo === "ahorro") {
+
+        datos.disponible -= valor;
+
+        datos.ahorro += valor;
+
+    }
+
+    datos.movimientos.unshift({
+
+        tipo: tipo,
+
+        valor: valor,
+
+        descripcion: descripcion,
+
+        fecha: new Date().toLocaleString("es-CO")
+
+    });
+
+    input.value = "";
+
+    actualizar();
+
+}
+
+function mostrarMovimientos() {
+
+    const lista =
+        document.getElementById("lista");
+
+    if (datos.movimientos.length === 0) {
+
+        lista.innerHTML =
+            "<p style='color:#64748b'>Todavía no tienes movimientos nuevos.</p>";
+
+        return;
+
+    }
+
+    lista.innerHTML =
+        datos.movimientos.map(function(m) {
+
+            let signo = "-";
+
+            let clase = "expense";
+
+            if (m.tipo === "ingreso") {
+
+                signo = "+";
+
+                clase = "income";
+
+            }
+
+            if (m.tipo === "ahorro") {
+
+                signo = "-";
+
+                clase = "saving";
+
+            }
+
+            return `
+
+                <div class="movement">
+
+                    <div>
+
+                        <b>${m.descripcion}</b>
+
+                        <small>${m.fecha}</small>
+
+                    </div>
+
+                    <strong class="${clase}">
+
+                        ${signo}${dinero(m.valor)}
+
+                    </strong>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+function reiniciar() {
+
+    if (
+        confirm(
+            "¿Seguro que quieres borrar los movimientos nuevos?"
+        )
+    ) {
+
+        datos.movimientos = [];
+
+        datos.ingresos = 0;
+
+        datos.ahorro = 0;
+
+        datos.gastosNuevos = 0;
+
+        datos.disponible = 192000;
+
+        actualizar();
+
+    }
+
+}
+
+actualizar();
+
+</script>
+
+</body>
+</html>
