@@ -6,584 +6,1341 @@
 <title>Mi Control Financiero</title>
 
 <style>
-* {
-    box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+background:#f1f5f9;
+color:#17202a;
 }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
-    color: #17202a;
+header{
+background:#111827;
+color:white;
+padding:22px 18px;
+text-align:center;
 }
 
-header {
-    background: #111827;
-    color: white;
-    padding: 24px 18px;
-    text-align: center;
+header h1{margin:0;font-size:25px}
+header p{margin:7px 0 0;color:#cbd5e1}
+
+.container{
+max-width:650px;
+margin:auto;
+padding:16px;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 25px;
+.card{
+background:white;
+border-radius:18px;
+padding:18px;
+margin-bottom:15px;
+box-shadow:0 4px 15px rgba(0,0,0,.07);
 }
 
-header p {
-    margin: 7px 0 0;
-    color: #cbd5e1;
+.balance{text-align:center}
+.balance small{color:#64748b}
+.balance h2{font-size:36px;margin:8px 0}
+
+.progress{
+height:12px;
+background:#e2e8f0;
+border-radius:20px;
+overflow:hidden;
+margin-top:12px;
 }
 
-.container {
-    max-width: 600px;
-    margin: auto;
-    padding: 18px;
+.progress-bar{
+height:100%;
+width:0%;
+background:#f59e0b;
+transition:.3s;
 }
 
-.card {
-    background: white;
-    border-radius: 18px;
-    padding: 18px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,.07);
+.stats{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
 }
 
-.balance {
-    text-align: center;
+.stat{
+background:#f8fafc;
+padding:13px;
+border-radius:14px;
 }
 
-.balance small {
-    color: #64748b;
+.stat span{
+display:block;
+font-size:13px;
+color:#64748b;
 }
 
-.balance h2 {
-    font-size: 36px;
-    margin: 8px 0;
+.stat strong{
+display:block;
+font-size:18px;
+margin-top:5px;
 }
 
-.progress {
-    height: 12px;
-    background: #e5e7eb;
-    border-radius: 20px;
-    overflow: hidden;
-    margin-top: 14px;
+input,select{
+width:100%;
+padding:14px;
+border:1px solid #cbd5e1;
+border-radius:12px;
+font-size:16px;
+margin-bottom:9px;
+background:white;
 }
 
-.progress-bar {
-    height: 100%;
-    width: 80.8%;
-    background: #f59e0b;
-    transition: .3s;
+button{
+width:100%;
+border:0;
+border-radius:12px;
+padding:14px;
+margin-top:8px;
+font-size:16px;
+font-weight:bold;
+background:#111827;
+color:white;
 }
 
-.stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+button.secondary{background:#475569}
+button.danger{background:#dc2626}
+button.green{background:#16a34a}
+button.small{
+width:auto;
+padding:8px 12px;
+font-size:13px;
+margin:3px;
 }
 
-.stat {
-    background: #f8fafc;
-    padding: 14px;
-    border-radius: 14px;
+.warning{
+padding:13px;
+border-radius:12px;
+background:#fff7ed;
+color:#9a3412;
+margin-top:13px;
+font-size:14px;
 }
 
-.stat span {
-    display: block;
-    color: #64748b;
-    font-size: 13px;
+.ok{
+background:#ecfdf5;
+color:#166534;
 }
 
-.stat strong {
-    display: block;
-    margin-top: 5px;
-    font-size: 18px;
+.section-title{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
 }
 
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 8px;
+.section-title h3{margin:0}
+
+.movement{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:13px 0;
+border-bottom:1px solid #e5e7eb;
+gap:10px;
 }
 
-input {
-    width: 100%;
-    padding: 15px;
-    border: 1px solid #cbd5e1;
-    border-radius: 12px;
-    font-size: 16px;
-    outline: none;
+.movement:last-child{border-bottom:0}
+
+.movement small{
+display:block;
+color:#64748b;
+margin-top:4px;
 }
 
-button {
-    width: 100%;
-    border: none;
-    border-radius: 12px;
-    padding: 15px;
-    margin-top: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    background: #111827;
-    color: white;
+.expense{color:#dc2626}
+.income{color:#16a34a}
+.saving{color:#2563eb}
+
+.category{
+font-size:11px;
+background:#e2e8f0;
+padding:3px 7px;
+border-radius:20px;
+display:inline-block;
+margin-top:4px;
 }
 
-button:active {
-    transform: scale(.98);
+.debt{
+padding:12px;
+background:#f8fafc;
+border-radius:12px;
+margin-bottom:9px;
 }
 
-.warning {
-    padding: 14px;
-    border-radius: 12px;
-    background: #fff7ed;
-    color: #9a3412;
-    margin-top: 15px;
-    font-size: 14px;
+.debt-top{
+display:flex;
+justify-content:space-between;
+font-weight:bold;
 }
 
-.movement {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 13px 0;
-    border-bottom: 1px solid #e5e7eb;
+.bar{
+height:8px;
+background:#e2e8f0;
+border-radius:20px;
+overflow:hidden;
+margin:8px 0;
 }
 
-.movement:last-child {
-    border-bottom: none;
+.bar div{
+height:100%;
+background:#2563eb;
 }
 
-.movement small {
-    display: block;
-    color: #64748b;
-    margin-top: 4px;
+.hidden{display:none}
+
+.history{
+padding:12px;
+border-bottom:1px solid #e5e7eb;
 }
 
-.expense {
-    color: #dc2626;
+.center{text-align:center}
+
+.muted{
+color:#64748b;
+font-size:13px;
 }
 
-.income {
-    color: #16a34a;
+#login{
+position:fixed;
+inset:0;
+background:#111827;
+z-index:9999;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
 }
 
-.saving {
-    color: #2563eb;
+.login-box{
+background:white;
+width:100%;
+max-width:360px;
+padding:25px;
+border-radius:20px;
+text-align:center;
 }
 
-.examples {
-    color: #64748b;
-    font-size: 13px;
-    line-height: 1.6;
+.login-box h2{margin-top:0}
+
+.pin{
+text-align:center;
+font-size:25px;
+letter-spacing:8px;
 }
 
-.reset {
-    background: #dc2626;
-    font-size: 14px;
+#app{display:none}
+
+canvas{
+width:100%;
+height:220px;
 }
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
+<div id="login">
+<div class="login-box">
+
+<h2>🔐 Mi Control</h2>
+
+<p id="loginText">Crea tu PIN para proteger la aplicación.</p>
+
+<input
+id="pin"
+class="pin"
+type="password"
+inputmode="numeric"
+maxlength="6"
+placeholder="••••"
+>
+
+<button onclick="entrar()">Continuar</button>
+
+<p class="muted">
+Tu PIN se guarda solamente en este navegador.
+</p>
+
+</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
 <header>
-    <h1>💰 Mi Control Financiero</h1>
-    <p>Control de mi quincena</p>
+<h1>💰 Mi Control Financiero</h1>
+<p id="periodo"></p>
 </header>
 
 <div class="container">
 
-    <div class="card balance">
-        <small>Dinero disponible</small>
-        <h2 id="disponible">$192.000</h2>
+<!-- BALANCE -->
+<div class="card balance">
 
-        <div class="progress">
-            <div class="progress-bar" id="barra"></div>
-        </div>
+<small>Dinero disponible</small>
 
-        <div id="advertencia" class="warning">
-            ⚠️ Ya utilizaste más del 80% de tu presupuesto.
-        </div>
-    </div>
+<h2 id="disponible">$0</h2>
 
-    <div class="card">
-        <div class="stats">
+<div class="progress">
+<div id="barra" class="progress-bar"></div>
+</div>
 
-            <div class="stat">
-                <span>Presupuesto</span>
-                <strong id="presupuesto">$1.000.000</strong>
-            </div>
+<div id="advertencia" class="warning"></div>
 
-            <div class="stat">
-                <span>Gastado</span>
-                <strong id="gastado">$808.000</strong>
-            </div>
+</div>
 
-            <div class="stat">
-                <span>Ingresos extra</span>
-                <strong id="ingresos">$0</strong>
-            </div>
+<!-- RESUMEN -->
+<div class="card">
 
-            <div class="stat">
-                <span>Ahorro</span>
-                <strong id="ahorro">$0</strong>
-            </div>
+<div class="stats">
 
-        </div>
-    </div>
+<div class="stat">
+<span>Presupuesto</span>
+<strong id="presupuesto">$0</strong>
+</div>
 
-    <div class="card">
-        <label>Registrar movimiento</label>
+<div class="stat">
+<span>Gastado</span>
+<strong id="gastado">$0</strong>
+</div>
 
-        <input
-            id="movimiento"
-            type="text"
-            placeholder="Ej: 80k fiesta"
-            autocomplete="off"
-        >
+<div class="stat">
+<span>Ingresos extra</span>
+<strong id="ingresos">$0</strong>
+</div>
 
-        <button onclick="registrarMovimiento()">
-            Registrar
-        </button>
+<div class="stat">
+<span>Ahorro</span>
+<strong id="ahorro">$0</strong>
+</div>
 
-        <div class="examples">
-            <b>Ejemplos:</b><br>
-            80k fiesta<br>
-            15k gasolina<br>
-            +70k trabajo sábado<br>
-            ingreso 50k<br>
-            ahorro 30k
-        </div>
-    </div>
+</div>
 
-    <div class="card">
-        <h3>📋 Movimientos</h3>
-        <div id="lista"></div>
-    </div>
+</div>
 
-    <div class="card">
-        <button class="reset" onclick="reiniciar()">
-            Reiniciar movimientos
-        </button>
-    </div>
+<!-- REGISTRAR -->
+<div class="card">
 
+<div class="section-title">
+<h3>➕ Registrar movimiento</h3>
+</div>
+
+<input
+id="movimiento"
+type="text"
+placeholder="Ej: 80k fiesta"
+autocomplete="off"
+>
+
+<button onclick="registrarMovimiento()">
+Registrar movimiento
+</button>
+
+<p class="muted">
+Ejemplos:
+<br>80k fiesta
+<br>25k gasolina
+<br>+70k trabajo sábado
+<br>50k deuda
+<br>30k ahorro
+</p>
+
+</div>
+
+<!-- DEUDAS -->
+<div class="card">
+
+<div class="section-title">
+<h3>💳 Deudas</h3>
+</div>
+
+<input
+id="deudaNombre"
+placeholder="Nombre de la deuda"
+>
+
+<input
+id="deudaValor"
+type="number"
+placeholder="Valor total"
+inputmode="numeric"
+>
+
+<button class="secondary" onclick="agregarDeuda()">
+Agregar deuda
+</button>
+
+<div id="listaDeudas"></div>
+
+</div>
+
+<!-- ESTADISTICAS -->
+<div class="card">
+
+<div class="section-title">
+<h3>📊 Estadísticas</h3>
+</div>
+
+<div id="estadisticas"></div>
+
+</div>
+
+<!-- MOVIMIENTOS -->
+<div class="card">
+
+<div class="section-title">
+<h3>📋 Movimientos</h3>
+</div>
+
+<div id="listaMovimientos"></div>
+
+</div>
+
+<!-- HISTORIAL -->
+<div class="card">
+
+<div class="section-title">
+<h3>📅 Historial</h3>
+</div>
+
+<div id="historial"></div>
+
+</div>
+
+<!-- CONFIGURACION -->
+<div class="card">
+
+<h3>⚙️ Configuración</h3>
+
+<label>Presupuesto de la quincena</label>
+
+<input
+id="nuevoPresupuesto"
+type="number"
+inputmode="numeric"
+>
+
+<button onclick="cambiarPresupuesto()">
+Cambiar presupuesto
+</button>
+
+<button class="secondary" onclick="nuevaQuincena()">
+Cerrar quincena y comenzar otra
+</button>
+
+<button class="danger" onclick="borrarTodo()">
+Borrar todos los datos
+</button>
+
+</div>
+
+</div>
 </div>
 
 <script>
 
-let datos = JSON.parse(localStorage.getItem("finanzas")) || {
+/* =========================
+   CONFIGURACION INICIAL
+========================= */
 
-    presupuesto: 1000000,
+const CLAVE = "mi_control_financiero_v2";
 
-    disponible: 192000,
+let datos = JSON.parse(localStorage.getItem(CLAVE));
 
-    ingresos: 0,
+if(!datos){
 
-    ahorro: 0,
+datos = {
 
-    gastosNuevos: 0,
+pin:"",
+presupuesto:1000000,
 
-    movimientos: []
+/* Ya gastado antes de comenzar la app */
+gastosIniciales:808000,
+
+gastosNuevos:0,
+
+disponible:192000,
+
+ingresos:0,
+
+ahorro:0,
+
+movimientos:[],
+
+deudas:[],
+
+historial:[],
+
+periodo:obtenerPeriodo()
 
 };
 
-function dinero(numero) {
-
-    return "$" + Math.round(numero).toLocaleString("es-CO");
+guardar();
 
 }
 
-function guardar() {
+/* =========================
+   FECHAS
+========================= */
 
-    localStorage.setItem("finanzas", JSON.stringify(datos));
+function obtenerPeriodo(){
 
-}
+const fecha=new Date();
 
-function actualizar() {
+const dia=fecha.getDate();
 
-    const gastosTotales = 808000 + datos.gastosNuevos;
+if(dia<=15){
 
-    document.getElementById("disponible").textContent =
-        dinero(datos.disponible);
-
-    document.getElementById("presupuesto").textContent =
-        dinero(datos.presupuesto);
-
-    document.getElementById("gastado").textContent =
-        dinero(gastosTotales);
-
-    document.getElementById("ingresos").textContent =
-        dinero(datos.ingresos);
-
-    document.getElementById("ahorro").textContent =
-        dinero(datos.ahorro);
-
-    const totalDisponible =
-        datos.presupuesto + datos.ingresos;
-
-    const usado =
-        gastosTotales + datos.ahorro;
-
-    let porcentaje =
-        (usado / totalDisponible) * 100;
-
-    if (porcentaje > 100) porcentaje = 100;
-
-    document.getElementById("barra").style.width =
-        porcentaje + "%";
-
-    const advertencia =
-        document.getElementById("advertencia");
-
-    if (datos.disponible <= 0) {
-
-        advertencia.textContent =
-            "🚨 Te quedaste sin presupuesto disponible.";
-
-    } else if (porcentaje >= 80) {
-
-        advertencia.textContent =
-            "⚠️ Cuidado: ya utilizaste el " +
-            porcentaje.toFixed(1) +
-            "% de tu presupuesto.";
-
-    } else if (porcentaje >= 60) {
-
-        advertencia.textContent =
-            "🟡 Vas utilizando el " +
-            porcentaje.toFixed(1) +
-            "% de tu presupuesto.";
-
-    } else {
-
-        advertencia.textContent =
-            "🟢 Vas bien con tu presupuesto.";
-
-    }
-
-    mostrarMovimientos();
-
-    guardar();
+return "1 - 15 de " +
+fecha.toLocaleString("es-CO",{month:"long"});
 
 }
 
-function registrarMovimiento() {
-
-    const input =
-        document.getElementById("movimiento");
-
-    let texto =
-        input.value.trim();
-
-    if (!texto) {
-
-        alert("Escribe un movimiento.");
-
-        return;
-
-    }
-
-    let tipo = "gasto";
-
-    const textoMinuscula =
-        texto.toLowerCase();
-
-    if (
-        texto.startsWith("+") ||
-        textoMinuscula.includes("ingreso") ||
-        textoMinuscula.includes("recibi") ||
-        textoMinuscula.includes("recibí") ||
-        textoMinuscula.includes("me pagaron") ||
-        textoMinuscula.includes("salario") ||
-        textoMinuscula.includes("nómina") ||
-        textoMinuscula.includes("nomina")
-    ) {
-
-        tipo = "ingreso";
-
-    }
-
-    if (textoMinuscula.includes("ahorro")) {
-
-        tipo = "ahorro";
-
-    }
-
-    const numeroEncontrado =
-        texto.match(/\d+(?:[.,]\d+)?\s*k?/i);
-
-    if (!numeroEncontrado) {
-
-        alert("No encontré el valor. Ejemplo: 80k fiesta");
-
-        return;
-
-    }
-
-    let valorTexto =
-        numeroEncontrado[0]
-        .toLowerCase()
-        .replace(/\s/g, "")
-        .replace(",", ".");
-
-    let valor =
-        parseFloat(valorTexto);
-
-    if (valorTexto.includes("k")) {
-
-        valor = valor * 1000;
-
-    }
-
-    if (!valor || valor <= 0) {
-
-        alert("Escribe un valor válido.");
-
-        return;
-
-    }
-
-    let descripcion =
-        texto
-        .replace(numeroEncontrado[0], "")
-        .replace("+", "")
-        .trim();
-
-    if (!descripcion) {
-
-        descripcion = "Sin descripción";
-
-    }
-
-    if (tipo === "gasto") {
-
-        datos.disponible -= valor;
-
-        datos.gastosNuevos += valor;
-
-    }
-
-    if (tipo === "ingreso") {
-
-        datos.disponible += valor;
-
-        datos.ingresos += valor;
-
-    }
-
-    if (tipo === "ahorro") {
-
-        datos.disponible -= valor;
-
-        datos.ahorro += valor;
-
-    }
-
-    datos.movimientos.unshift({
-
-        tipo: tipo,
-
-        valor: valor,
-
-        descripcion: descripcion,
-
-        fecha: new Date().toLocaleString("es-CO")
-
-    });
-
-    input.value = "";
-
-    actualizar();
+return "16 - " +
+new Date(
+fecha.getFullYear(),
+fecha.getMonth()+1,
+0
+).getDate()
++
+" de " +
+fecha.toLocaleString("es-CO",{month:"long"});
 
 }
 
-function mostrarMovimientos() {
+/* =========================
+   DINERO
+========================= */
 
-    const lista =
-        document.getElementById("lista");
+function dinero(valor){
 
-    if (datos.movimientos.length === 0) {
-
-        lista.innerHTML =
-            "<p style='color:#64748b'>Todavía no tienes movimientos nuevos.</p>";
-
-        return;
-
-    }
-
-    lista.innerHTML =
-        datos.movimientos.map(function(m) {
-
-            let signo = "-";
-
-            let clase = "expense";
-
-            if (m.tipo === "ingreso") {
-
-                signo = "+";
-
-                clase = "income";
-
-            }
-
-            if (m.tipo === "ahorro") {
-
-                signo = "-";
-
-                clase = "saving";
-
-            }
-
-            return `
-
-                <div class="movement">
-
-                    <div>
-
-                        <b>${m.descripcion}</b>
-
-                        <small>${m.fecha}</small>
-
-                    </div>
-
-                    <strong class="${clase}">
-
-                        ${signo}${dinero(m.valor)}
-
-                    </strong>
-
-                </div>
-
-            `;
-
-        }).join("");
+return "$" +
+Math.round(valor).toLocaleString("es-CO");
 
 }
 
-function reiniciar() {
+/* =========================
+   GUARDAR
+========================= */
 
-    if (
-        confirm(
-            "¿Seguro que quieres borrar los movimientos nuevos?"
-        )
-    ) {
+function guardar(){
 
-        datos.movimientos = [];
-
-        datos.ingresos = 0;
-
-        datos.ahorro = 0;
-
-        datos.gastosNuevos = 0;
-
-        datos.disponible = 192000;
-
-        actualizar();
-
-    }
+localStorage.setItem(
+CLAVE,
+JSON.stringify(datos)
+);
 
 }
+
+/* =========================
+   LOGIN
+========================= */
+
+function entrar(){
+
+const pin=document.getElementById("pin").value;
+
+if(pin.length<4){
+
+alert("El PIN debe tener mínimo 4 números.");
+
+return;
+
+}
+
+if(!datos.pin){
+
+datos.pin=pin;
+
+guardar();
+
+mostrarApp();
+
+return;
+
+}
+
+if(pin===datos.pin){
+
+mostrarApp();
+
+}else{
+
+alert("PIN incorrecto.");
+
+document.getElementById("pin").value="";
+
+}
+
+}
+
+function mostrarApp(){
+
+document.getElementById("login").style.display="none";
+
+document.getElementById("app").style.display="block";
 
 actualizar();
+
+}
+
+/* =========================
+   CATEGORIAS
+========================= */
+
+function detectarCategoria(texto){
+
+const t=texto.toLowerCase();
+
+if(
+t.includes("gasolina") ||
+t.includes("combustible")
+)return "⛽ Gasolina";
+
+if(
+t.includes("comida") ||
+t.includes("almuerzo") ||
+t.includes("desayuno") ||
+t.includes("cena") ||
+t.includes("pizza") ||
+t.includes("comer")
+)return "🍔 Comida";
+
+if(
+t.includes("moto") ||
+t.includes("aceite") ||
+t.includes("mantenimiento") ||
+t.includes("repuesto")
+)return "🏍️ Moto";
+
+if(
+t.includes("deuda") ||
+t.includes("cuota") ||
+t.includes("prestamo") ||
+t.includes("préstamo")
+)return "💳 Deuda";
+
+if(
+t.includes("fiesta") ||
+t.includes("rumba") ||
+t.includes("salida") ||
+t.includes("discoteca")
+)return "🎉 Fiesta";
+
+if(
+t.includes("ahorro")
+)return "🏦 Ahorro";
+
+if(
+t.includes("trabajo") ||
+t.includes("salario") ||
+t.includes("nómina") ||
+t.includes("nomina")
+)return "💼 Trabajo";
+
+return "📦 Otros";
+
+}
+
+/* =========================
+   REGISTRAR MOVIMIENTO
+========================= */
+
+function registrarMovimiento(){
+
+let input=document.getElementById("movimiento");
+
+let texto=input.value.trim();
+
+if(!texto){
+
+alert("Escribe un movimiento.");
+
+return;
+
+}
+
+let minus=texto.toLowerCase();
+
+let tipo="gasto";
+
+if(
+texto.startsWith("+") ||
+minus.includes("ingreso") ||
+minus.includes("recibi") ||
+minus.includes("recibí") ||
+minus.includes("me pagaron") ||
+minus.includes("salario") ||
+minus.includes("nómina") ||
+minus.includes("nomina")
+){
+
+tipo="ingreso";
+
+}
+
+if(minus.includes("ahorro")){
+
+tipo="ahorro";
+
+}
+
+const encontrado=
+texto.match(/\d+(?:[.,]\d+)?\s*k?/i);
+
+if(!encontrado){
+
+alert("No encontré el valor.");
+
+return;
+
+}
+
+let valorTexto=
+encontrado[0]
+.toLowerCase()
+.replace(/\s/g,"")
+.replace(",", ".");
+
+let valor=parseFloat(valorTexto);
+
+if(valorTexto.includes("k")){
+
+valor*=1000;
+
+}
+
+if(!valor || valor<=0){
+
+alert("Valor inválido.");
+
+return;
+
+}
+
+let descripcion=
+texto
+.replace(encontrado[0],"")
+.replace("+","")
+.trim();
+
+if(!descripcion){
+
+descripcion="Sin descripción";
+
+}
+
+let categoria=detectarCategoria(descripcion);
+
+if(tipo==="gasto"){
+
+datos.disponible-=valor;
+datos.gastosNuevos+=valor;
+
+}
+
+if(tipo==="ingreso"){
+
+datos.disponible+=valor;
+datos.ingresos+=valor;
+
+}
+
+if(tipo==="ahorro"){
+
+datos.disponible-=valor;
+datos.ahorro+=valor;
+
+}
+
+datos.movimientos.unshift({
+
+tipo,
+valor,
+descripcion,
+categoria,
+fecha:new Date().toLocaleString("es-CO")
+
+});
+
+input.value="";
+
+guardar();
+
+actualizar();
+
+}
+
+/* =========================
+   ACTUALIZAR
+========================= */
+
+function actualizar(){
+
+const gastos=
+datos.gastosIniciales+
+datos.gastosNuevos;
+
+document.getElementById("disponible")
+.textContent=dinero(datos.disponible);
+
+document.getElementById("presupuesto")
+.textContent=dinero(datos.presupuesto);
+
+document.getElementById("gastado")
+.textContent=dinero(gastos);
+
+document.getElementById("ingresos")
+.textContent=dinero(datos.ingresos);
+
+document.getElementById("ahorro")
+.textContent=dinero(datos.ahorro);
+
+document.getElementById("periodo")
+.textContent="Quincena: "+datos.periodo;
+
+document.getElementById("nuevoPresupuesto")
+.value=datos.presupuesto;
+
+const total=
+datos.presupuesto+
+datos.ingresos;
+
+const usado=
+gastos+
+datos.ahorro;
+
+let porcentaje=
+(usado/total)*100;
+
+if(porcentaje>100)
+porcentaje=100;
+
+document.getElementById("barra")
+.style.width=porcentaje+"%";
+
+let aviso=
+document.getElementById("advertencia");
+
+if(datos.disponible<=0){
+
+aviso.textContent=
+"🚨 Te quedaste sin dinero disponible.";
+
+aviso.className="warning";
+
+}else if(porcentaje>=80){
+
+aviso.textContent=
+"⚠️ Cuidado: ya utilizaste "+
+porcentaje.toFixed(1)+
+"% de tu presupuesto.";
+
+aviso.className="warning";
+
+}else{
+
+aviso.textContent=
+"🟢 Vas bien. Has utilizado "+
+porcentaje.toFixed(1)+
+"% del presupuesto.";
+
+aviso.className="warning ok";
+
+}
+
+mostrarMovimientos();
+mostrarDeudas();
+mostrarEstadisticas();
+mostrarHistorial();
+
+guardar();
+
+}
+
+/* =========================
+   MOVIMIENTOS
+========================= */
+
+function mostrarMovimientos(){
+
+const lista=
+document.getElementById("listaMovimientos");
+
+if(!datos.movimientos.length){
+
+lista.innerHTML=
+"<p class='muted'>No hay movimientos nuevos.</p>";
+
+return;
+
+}
+
+lista.innerHTML=
+datos.movimientos.map((m,i)=>{
+
+let signo="-";
+let clase="expense";
+
+if(m.tipo==="ingreso"){
+
+signo="+";
+clase="income";
+
+}
+
+if(m.tipo==="ahorro"){
+
+clase="saving";
+
+}
+
+return `
+
+<div class="movement">
+
+<div>
+
+<b>${m.descripcion}</b>
+
+<small>
+${m.categoria}
+</small>
+
+<small>
+${m.fecha}
+</small>
+
+</div>
+
+<div>
+
+<strong class="${clase}">
+${signo}${dinero(m.valor)}
+</strong>
+
+<br>
+
+<button
+class="small danger"
+onclick="eliminarMovimiento(${i})">
+Eliminar
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}).join("");
+
+}
+
+function eliminarMovimiento(i){
+
+if(!confirm("¿Eliminar este movimiento?"))
+return;
+
+const m=datos.movimientos[i];
+
+if(m.tipo==="gasto"){
+
+datos.disponible+=m.valor;
+datos.gastosNuevos-=m.valor;
+
+}
+
+if(m.tipo==="ingreso"){
+
+datos.disponible-=m.valor;
+datos.ingresos-=m.valor;
+
+}
+
+if(m.tipo==="ahorro"){
+
+datos.disponible+=m.valor;
+datos.ahorro-=m.valor;
+
+}
+
+datos.movimientos.splice(i,1);
+
+actualizar();
+
+}
+
+/* =========================
+   DEUDAS
+========================= */
+
+function agregarDeuda(){
+
+const nombre=
+document.getElementById("deudaNombre")
+.value.trim();
+
+const valor=
+parseFloat(
+document.getElementById("deudaValor").value
+);
+
+if(!nombre || !valor){
+
+alert("Completa nombre y valor.");
+
+return;
+
+}
+
+datos.deudas.push({
+
+nombre,
+total:valor,
+pagado:0
+
+});
+
+document.getElementById("deudaNombre").value="";
+document.getElementById("deudaValor").value="";
+
+actualizar();
+
+}
+
+function pagarDeuda(i){
+
+const deuda=datos.deudas[i];
+
+const pago=parseFloat(
+prompt(
+"¿Cuánto vas a pagar de "+deuda.nombre+"?"
+)
+);
+
+if(!pago || pago<=0)
+return;
+
+if(pago>deuda.total-deuda.pagado){
+
+alert("El pago supera la deuda.");
+
+return;
+
+}
+
+deuda.pagado+=pago;
+
+datos.disponible-=pago;
+
+datos.gastosNuevos+=pago;
+
+datos.movimientos.unshift({
+
+tipo:"gasto",
+valor:pago,
+descripcion:"Pago "+deuda.nombre,
+categoria:"💳 Deuda",
+fecha:new Date().toLocaleString("es-CO")
+
+});
+
+actualizar();
+
+}
+
+function eliminarDeuda(i){
+
+if(confirm("¿Eliminar esta deuda?")){
+
+datos.deudas.splice(i,1);
+
+actualizar();
+
+}
+
+}
+
+function mostrarDeudas(){
+
+const lista=
+document.getElementById("listaDeudas");
+
+if(!datos.deudas.length){
+
+lista.innerHTML=
+"<p class='muted'>No tienes deudas registradas.</p>";
+
+return;
+
+}
+
+lista.innerHTML=
+datos.deudas.map((d,i)=>{
+
+const restante=d.total-d.pagado;
+
+const porcentaje=
+(d.pagado/d.total)*100;
+
+return `
+
+<div class="debt">
+
+<div class="debt-top">
+
+<span>${d.nombre}</span>
+
+<span>${dinero(restante)}</span>
+
+</div>
+
+<div class="bar">
+
+<div style="width:${porcentaje}%"></div>
+
+</div>
+
+<small>
+Pagado: ${dinero(d.pagado)}
+de ${dinero(d.total)}
+</small>
+
+<br>
+
+<button
+class="small green"
+onclick="pagarDeuda(${i})">
+Pagar
+</button>
+
+<button
+class="small danger"
+onclick="eliminarDeuda(${i})">
+Eliminar
+</button>
+
+</div>
+
+`;
+
+}).join("");
+
+}
+
+/* =========================
+   ESTADISTICAS
+========================= */
+
+function mostrarEstadisticas(){
+
+const gastos={};
+
+datos.movimientos.forEach(m=>{
+
+if(m.tipo!=="gasto")
+return;
+
+gastos[m.categoria]=
+(gastos[m.categoria]||0)+m.valor;
+
+});
+
+const lista=
+Object.entries(gastos)
+.sort((a,b)=>b[1]-a[1]);
+
+const contenedor=
+document.getElementById("estadisticas");
+
+if(!lista.length){
+
+contenedor.innerHTML=
+"<p class='muted'>Todavía no hay gastos nuevos para analizar.</p>";
+
+return;
+
+}
+
+contenedor.innerHTML=
+lista.map(x=>`
+
+<div class="movement">
+
+<span>${x[0]}</span>
+
+<strong>${dinero(x[1])}</strong>
+
+</div>
+
+`).join("");
+
+}
+
+/* =========================
+   HISTORIAL
+========================= */
+
+function mostrarHistorial(){
+
+const contenedor=
+document.getElementById("historial");
+
+if(!datos.historial.length){
+
+contenedor.innerHTML=
+"<p class='muted'>Aquí aparecerán tus quincenas anteriores.</p>";
+
+return;
+
+}
+
+contenedor.innerHTML=
+datos.historial.map(h=>`
+
+<div class="history">
+
+<b>${h.periodo}</b>
+
+<br>
+
+<small>
+Presupuesto: ${dinero(h.presupuesto)}
+</small>
+
+<br>
+
+<small>
+Gastado: ${dinero(h.gastado)}
+</small>
+
+<br>
+
+<small>
+Ingresos extra: ${dinero(h.ingresos)}
+</small>
+
+<br>
+
+<small>
+Ahorro: ${dinero(h.ahorro)}
+</small>
+
+</div>
+
+`).join("");
+
+}
+
+/* =========================
+   PRESUPUESTO
+========================= */
+
+function cambiarPresupuesto(){
+
+const valor=
+parseFloat(
+document.getElementById("nuevoPresupuesto").value
+);
+
+if(!valor || valor<=0){
+
+alert("Escribe un presupuesto válido.");
+
+return;
+
+}
+
+datos.presupuesto=valor;
+
+actualizar();
+
+alert("Presupuesto actualizado.");
+
+}
+
+/* =========================
+   NUEVA QUINCENA
+========================= */
+
+function nuevaQuincena(){
+
+if(!confirm(
+"Se guardará esta quincena en el historial y comenzarás una nueva."
+))
+return;
+
+const gastado=
+datos.gastosIniciales+
+datos.gastosNuevos;
+
+datos.historial.unshift({
+
+periodo:datos.periodo,
+
+presupuesto:datos.presupuesto,
+
+gastado,
+
+ingresos:datos.ingresos,
+
+ahorro:datos.ahorro
+
+});
+
+datos.gastosIniciales=0;
+datos.gastosNuevos=0;
+datos.ingresos=0;
+datos.ahorro=0;
+datos.movimientos=[];
+datos.disponible=datos.presupuesto;
+datos.periodo=obtenerPeriodo();
+
+actualizar();
+
+}
+
+/* =========================
+   BORRAR TODO
+========================= */
+
+function borrarTodo(){
+
+if(!confirm(
+"Esto borrará todos los datos de la aplicación. ¿Continuar?"
+))
+return;
+
+localStorage.removeItem(CLAVE);
+
+location.reload();
+
+}
+
+/* =========================
+   INICIO
+========================= */
+
+if(datos.pin){
+
+document.getElementById("loginText")
+.textContent="Introduce tu PIN para entrar.";
+
+}else{
+
+document.getElementById("loginText")
+.textContent="Crea tu PIN para proteger la aplicación.";
+
+}
 
 </script>
 
